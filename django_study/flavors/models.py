@@ -23,4 +23,4 @@ class Flavor(TimeStampedModel):
     title = models.CharField(max_length=200)
     body = models.TextField(blank = True)
 
-    object = PublishedQuerySet().as_manager()
+    objects = PublishedQuerySet().as_manager()
