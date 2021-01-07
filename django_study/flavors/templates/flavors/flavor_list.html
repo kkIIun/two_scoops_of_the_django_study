@@ -1,0 +1,6 @@
+{% for test in tests %}
+<a href="{%url 'detail' test.id %}">{{test.title}}</a>
+{% endfor %}
+<div>
+    <button><a href="{% url 'create'%}">생성하기</a></button>
+</div>

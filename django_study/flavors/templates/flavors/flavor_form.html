@@ -1,0 +1,11 @@
+<body>
+    <h1>New!!</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        <table>
+            {{form.as_p}}
+        </table>
+        <input class="btn btn-dark" type="submit" value="저장">
+        <hr>
+    </form>
+</body>
