@@ -4,6 +4,8 @@ from django.db import transaction
 from .models import Flavor
 from django.views.generic import ListView,DetailView,UpdateView,CreateView
 from django.shortcuts import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 # try:
 #   return Flavor.objects.get
@@ -38,29 +40,57 @@ class FlavorListView(ListView):
     context_object_name = 'tests'
 
     def get_queryset(self):
-        return Flavor.objects.published()
+        queryset = super().get_queryset()
 
-class FlavorDetailView(DetailView):
+        q = self.request.GET.get("q")
+        if q:
+            return queryset.filter(title__icontains =q)
+        return Flavor.objects.all()
+
+
+class FlavorMixin(object):
+    
+
+    def test(self):
+        body = self.object.body
+        title = self.object.title
+        id = self.object.id
+        return{
+            "title" : title,
+            "body" : body,
+            "id" : id
+        }
+
+class FlavorDetailView(LoginRequiredMixin,FlavorMixin,DetailView):
     model = Flavor
-    context_object_name = 'test'
+    login_url = "/admin"
 
 # class FlavorResultsView(FlavorDetailView):
 #     template_name = "tastings/detail.html"
     
 # class FlavorUpdateView(UpdateView):
 
-class FlavorCreateView(CreateView):
+class FlavorActionMixin(object):
     model = Flavor
     fields = ('title','body')
-    
-    def get_success_url(self):
-        return reverse("detail",
-            kwargs={"pk": self.object.pk})
-    
-class FlavorUpdateView(UpdateView):
-    model = Flavor
-    fields = ('title','body')
+    login_url = "/admin"
+    redirect_field_name = "/flavor"
+
+    @property
+    def success_msg(self):
+        return NotImplemented
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_msg)
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse("detail",
             kwargs={"pk": self.object.pk})
+
+class FlavorCreateView(LoginRequiredMixin,FlavorActionMixin,CreateView):
+    success_msg = "Flavor create!"
+    
+class FlavorUpdateView(LoginRequiredMixin,FlavorActionMixin,UpdateView):
+    success_msg = "Flavor update!"
+

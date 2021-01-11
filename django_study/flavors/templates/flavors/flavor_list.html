@@ -1,3 +1,7 @@
+<form action="{% url 'index'%}" metohd="GET">
+    <input type="text" name="q">
+    <button type="submit">search</button>
+</form>
 {% for test in tests %}
 <a href="{%url 'detail' test.id %}">{{test.title}}</a>
 {% endfor %}
