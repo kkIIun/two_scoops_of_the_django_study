@@ -8,3 +8,15 @@
 <div>
     <button><a href="{% url 'create'%}">생성하기</a></button>
 </div>
+{% if user.is_authenticated %}
+    <div>
+        <button><a href="{% url 'sign_out'%}">로그아웃</a></button>
+    </div>
+{% else %}
+    <div>
+        <button><a href="{% url 'sign_in'%}">로그인</a></button>
+    </div>
+    <div>
+        <button><a href="{% url 'sign_up'%}">회원가입</a></button>
+    </div>
+{% endif %}
