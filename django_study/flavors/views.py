@@ -6,6 +6,8 @@ from django.views.generic import ListView,DetailView,UpdateView,CreateView
 from django.shortcuts import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from .forms import FlavorForm
+from account.models import CustomUser
 
 # try:
 #   return Flavor.objects.get
@@ -35,10 +37,7 @@ def transaction_test2(arg1, arg2):
         c.save()
         #end transaction
 
-class FlavorListView(ListView):
-    model = Flavor
-    context_object_name = 'tests'
-
+class TitleSearchMixin(object):
     def get_queryset(self):
         queryset = super().get_queryset()
 
@@ -47,10 +46,13 @@ class FlavorListView(ListView):
             return queryset.filter(title__icontains =q)
         return Flavor.objects.all()
 
+class FlavorListView(TitleSearchMixin,ListView):
+    model = Flavor
+    context_object_name = 'tests'
+
 
 class FlavorMixin(object):
     
-
     def test(self):
         body = self.object.body
         title = self.object.title
@@ -63,7 +65,7 @@ class FlavorMixin(object):
 
 class FlavorDetailView(LoginRequiredMixin,FlavorMixin,DetailView):
     model = Flavor
-    login_url = "/admin"
+    login_url = "/sign/in"
 
 # class FlavorResultsView(FlavorDetailView):
 #     template_name = "tastings/detail.html"
@@ -73,7 +75,6 @@ class FlavorDetailView(LoginRequiredMixin,FlavorMixin,DetailView):
 class FlavorActionMixin(object):
     model = Flavor
     fields = ('title','body')
-    login_url = "/admin"
     redirect_field_name = "/flavor"
 
     @property
@@ -89,8 +90,11 @@ class FlavorActionMixin(object):
             kwargs={"pk": self.object.pk})
 
 class FlavorCreateView(LoginRequiredMixin,FlavorActionMixin,CreateView):
-    success_msg = "Flavor create!"
+    login_url = "/sign/in"
+    success_msg = "create!"
     
 class FlavorUpdateView(LoginRequiredMixin,FlavorActionMixin,UpdateView):
-    success_msg = "Flavor update!"
-
+    login_url = "/sign/in"
+    success_msg = "update!"
+    
+    

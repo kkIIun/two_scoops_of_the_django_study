@@ -1,7 +1,8 @@
 from django import forms
-from django.contrib.auth.models import User
+from .models import CustomUser
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
 from django.contrib.auth.hashers import check_password
+
 
 class SignInForm(forms.Form):
     username = forms.CharField(max_length=32, label="아이디",
@@ -19,7 +20,7 @@ class SignInForm(forms.Form):
         password = cleaned_data.get('password')
         
         if username and password :
-            user = User.objects.get(username=username)
+            user = CustomUser.objects.get(username=username)
 
             if not check_password(password,user.password) :
                 self.add_error('password','비밀번호가 틀렸습니다.')
@@ -27,8 +28,21 @@ class SignInForm(forms.Form):
         return cleaned_data
 
 
-class SignUpForm(UserCreationForm) :
+class SignUpForm(forms.ModelForm) :
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['phone'].required = True
+        self.fields['address'].required = True
 
     class Meta:
-        model = User
-        fields = ['username','password1','password2']
+        model = CustomUser
+        fields = ['username','password','password_confirm','phone','address']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password')
+        password2 = cleaned_data.get('password_confirm')
+
+        if password1 != password2 :
+            self.add_error('password_confirm','비밀번호가 일치하지 않습니다.')
