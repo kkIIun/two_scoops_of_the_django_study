@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from .forms import SignInForm, SignUpForm
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.models import User
 
 def sign_in_function(request):
     if request.method == 'POST':
@@ -22,7 +23,10 @@ def sign_up_function(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            user = User.objects.create_user(
+                        username = request.POST["username"], 
+                        password = request.POST["password"],
+                    )
             login(request,user)
             return redirect('index')
 

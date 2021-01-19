@@ -8,6 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .forms import FlavorForm
 from account.models import CustomUser
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from .serializers  import FlavorSerializer
 
 # try:
 #   return Flavor.objects.get
@@ -97,4 +99,10 @@ class FlavorUpdateView(LoginRequiredMixin,FlavorActionMixin,UpdateView):
     login_url = "/sign/in"
     success_msg = "update!"
     
-    
+class FlavorCreateReadView(ListCreateAPIView):
+    queryset = Flavor.objects.all()
+    serializer_class = FlavorSerializer
+
+class FlavorReadUpdateDeleteView(RetrieveUpdateDestroyAPIView):
+    queryset = Flavor.objects.all()
+    serializer_class = FlavorSerializer
