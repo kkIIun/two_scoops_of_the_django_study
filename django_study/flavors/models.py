@@ -24,3 +24,7 @@ class Flavor(TimeStampedModel):
     # slug = models.SlugField(default= False)
     body = models.TextField(blank = True)
     objects = PublishedQuerySet().as_manager()
+
+    def __str__(self):
+        return self.title
+    

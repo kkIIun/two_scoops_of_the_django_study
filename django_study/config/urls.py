@@ -7,6 +7,7 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^flavor/', include(flavors.urls)),
     url(r'^sign/', include(account.urls)),
 ]
