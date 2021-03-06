@@ -7,7 +7,6 @@ from django.shortcuts import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .forms import FlavorForm
-from account.models import CustomUser
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from .serializers  import FlavorSerializer
 

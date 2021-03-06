@@ -1,5 +1,5 @@
 from django import forms
-from .models import CustomUser
+# from .models import CustomUser
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import get_object_or_404
@@ -44,17 +44,17 @@ class SignUpForm(forms.Form) :
         error_messages={
             'required' : "비밀번호확인을 입력하세요"
         })
-    phone = forms.CharField(max_length=20)
-    address = forms.CharField(max_length=100)
+    # phone = forms.CharField(max_length=20)
+    # address = forms.CharField(max_length=100)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['phone'].required = True
-        self.fields['address'].required = True
+        # self.fields['phone'].required = True
+        # self.fields['address'].required = True
 
     class Meta:
         model = User
-        fields = ['username','password','confirm_password','phone','address']
+        fields = ['username','password','confirm_password']
 
     def clean(self):
         cleaned_data = super().clean()
