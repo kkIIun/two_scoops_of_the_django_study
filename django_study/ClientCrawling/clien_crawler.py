@@ -10,6 +10,7 @@ from ClientCrawling.models import Movie
 
 def crawling():
     html = ''
+    
     for i in range(20):
         url = 'https://movie.naver.com/movie/sdb/rank/rmovie.nhn?sel=pnt&date=20210305&page=' + str(i)
         response = requests.get(url)
